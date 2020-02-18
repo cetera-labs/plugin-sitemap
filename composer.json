@@ -1,0 +1,27 @@
+{
+    "name": "cetera-labs/plugin-sitemap",
+    "description": "Widget displaying a sitemap",
+    "type": "cetera-cms-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roman Romanov",
+            "email": "nicodim@mail.ru",
+            "role": "Lead Developer"
+        }
+    ],
+    
+    "minimum-stability": "dev",
+    
+    "autoload": {
+        "psr-0": { 
+			"Sitemap\\": "classes/"
+		}
+    },
+
+    "extra": {
+        "name": "sitemap ",
+        "title": "Widget displaying a sitemap",
+        "description": ""
+    }
+}

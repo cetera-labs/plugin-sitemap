@@ -1,0 +1,21 @@
+{% macro getMapItems(el) %}
+    {% import _self as mc %}
+    <ul>
+        {% for item in el %}
+            <li>
+                <a href="{{ item.url }}">{{ item.name }}</a>
+                {% if item.children is defined and item.children|length > 0 %}
+                    {{ mc.getMapItems(item.children) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% import _self as mc %}
+
+<div class="row">
+    <div class="columns small-12">
+        {{ mc.getMapItems(widget.getSitemap()) }}
+    </div>
+</div>
