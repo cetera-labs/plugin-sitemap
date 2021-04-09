@@ -216,7 +216,7 @@ class Sitemap
 
                 $item = Array(
                     "id" => $c->id,
-                    "url" => preg_replace("#([^:])//#is", "$1/", $c->getFullUrl()),
+                    "url" => $c->getUrl(),
                     "name" => $c->name
                 );
 
@@ -244,7 +244,7 @@ class Sitemap
                     if ($c && empty($c->hidden) && $c->alias !== "index" && $c->published) {
                         $item = Array(
                             "id" => $c->id,
-                            "url" => preg_replace("#([^:])//#is", "$1/", $c->getFullUrl()),
+                            "url" => $c->getUrl(),
                             "name" => $c->name,
                             "material" => "Y",
                         );
