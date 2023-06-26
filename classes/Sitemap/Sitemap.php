@@ -15,7 +15,7 @@ class Sitemap
     protected $nofollow = array('/cms/');
     protected $info = Array();
 
-    public static function getTreeList($dirs = "", $nodeId, $root = false)
+    public static function getTreeList($nodeId, $dirs = "", $root = false)
     {
         $p = new self();
         $p->setDirs($dirs);
@@ -106,7 +106,7 @@ class Sitemap
 
     public function getFullTree($nodeId)
     {
-        return !empty($nodeId) ? self::getTree($nodeId, -1) : null;
+        return isset($nodeId) ? self::getTree($nodeId, -1) : null;
     }
 
     function getTree($id, $level = 0)
@@ -126,7 +126,7 @@ class Sitemap
                 $a = self::process_child($child, $exclude, $nocatselect);
                 if (is_array($a)) {
                     $a["children"] = self::getTree($a["id"], $level);
-                    $a["children"] = self::array_delete($a["children"], Array('', 0, false, null));
+                    $a["children"] = self::array_delete($a["children"]);
 
                     if (is_array($this->info["dirs"]) && count($this->info["dirs"])) {
                         $a['checked'] = in_array("s-" . $a["id"], $this->info["dirs"]) ? true : false;
@@ -145,7 +145,7 @@ class Sitemap
                     $a = self::process_child($child, $exclude, $nocatselect);
                     if (is_array($a)) {
                         $a["children"] = self::getTree($a["id"], $level);
-                        $a["children"] = self::array_delete($a["children"], Array('', 0, false, null));
+                        $a["children"] = self::array_delete($a["children"]);
 
                         if (is_array($this->info["dirs"]) && count($this->info["dirs"])) {
                             $a['checked'] = in_array("s-" . $a["id"], $this->info["dirs"]) ? true : false;
@@ -164,7 +164,7 @@ class Sitemap
                 }
             }
         }
-        $nodes = self::array_delete($nodes, Array('', 0, false, null));
+        $nodes = self::array_delete($nodes);
 
         return $nodes;
     }
@@ -177,9 +177,9 @@ class Sitemap
      *
      * @return array
      */
-    public static function array_delete(array $array = Array(), array $symbols = array(''))
+    public static function array_delete(array $array = Array())
     {
-        return array_diff($array, $symbols);
+		return array_filter($array, fn($element) => $element);
     }
 
     public function getSitemap()
@@ -201,7 +201,7 @@ class Sitemap
         if (count($dirs)) {
             $filter["id"] = $dirs;
         }
-        $list = self::getList(Array("id" => "ASC"), $filter, Array("LIMIT" => 5000));
+        $list = self::getList(Array("id" => "ASC"), $filter, Array("LIMIT" => 5000, "TOP" => 0, "PAGE" => 0));
         $nodeArray = Array();
         $tables = Array();
         while ($el = $list->fetch()) {
@@ -237,7 +237,7 @@ class Sitemap
             if (count($materialDirs)) {
                 $filter["idcat"] = $materialDirs;
             }
-            $materials = self::getList(Array("id" => "ASC"), $filter, Array("LIMIT" => 5000));
+            $materials = self::getList(Array("id" => "ASC"), $filter, Array("LIMIT" => 5000, "TOP" => 0, "PAGE" => 0));
             while ($el = $materials->fetch()) {
                 try {
                     $c = \Cetera\Material::getById($el["id"], $el["type"], $table);
